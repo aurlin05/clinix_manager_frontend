@@ -1,0 +1,96 @@
+<!-- → src/app/modules/medecins/components/medecin-list/medecin-list.html -->
+<div @fadeInUp class="list-page">
+  <!-- Header -->
+  <div class="list-header">
+    <div>
+      <h1 class="page-title">Médecins</h1>
+      <p class="page-subtitle">Gestion du corps médical</p>
+    </div>
+    <button mat-raised-button class="btn-primary" (click)="openForm()">
+      <mat-icon>add</mat-icon> Nouveau médecin
+    </button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <app-search-bar (searchTerm)="onSearch($event)" class="flex-1"></app-search-bar>
+    <select [(ngModel)]="specialiteFilter" (ngModelChange)="onSpecialiteChange()" class="filter-select">
+      <option value="">Toutes spécialités</option>
+      <option *ngFor="let s of specialites" [value]="s">{{ s }}</option>
+    </select>
+  </div>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+
+  <div class="table-card overflow-x-auto">
+    <table mat-table [dataSource]="filtered" class="w-full" [@staggerList]="filtered.length">
+
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef style="width:56px"></th>
+        <td mat-cell *matCellDef="let m">
+          <div class="avatar avatar-green">{{ getInitials(m.nom, m.prenom) }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef>Médecin</th>
+        <td mat-cell *matCellDef="let m">
+          <div class="cell-primary">Dr. {{ m.prenom }} {{ m.nom }}</div>
+          <div class="cell-secondary">{{ m.email }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="specialite">
+        <th mat-header-cell *matHeaderCellDef>Spécialité</th>
+        <td mat-cell *matCellDef="let m">
+          <span class="badge badge-purple">{{ m.specialite }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="telephone">
+        <th mat-header-cell *matHeaderCellDef>Téléphone</th>
+        <td mat-cell *matCellDef="let m" class="cell-secondary">{{ m.telephone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="matricule">
+        <th mat-header-cell *matHeaderCellDef>Matricule</th>
+        <td mat-cell *matCellDef="let m" class="cell-mono">{{ m.matricule }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="disponible">
+        <th mat-header-cell *matHeaderCellDef>Statut</th>
+        <td mat-cell *matCellDef="let m">
+          <span class="badge" [class.badge-green]="m.disponible" [class.badge-gray]="!m.disponible">
+            <span class="dot" [class.dot-green]="m.disponible" [class.dot-gray]="!m.disponible"></span>
+            {{ m.disponible ? 'Disponible' : 'Indisponible' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef style="width:96px"></th>
+        <td mat-cell *matCellDef="let m">
+          <div class="row-actions">
+            <button mat-icon-button matTooltip="Modifier" class="action-btn action-edit" (click)="openForm(m)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Supprimer" class="action-btn action-delete" (click)="delete(m)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <div *ngIf="!loading && filtered.length === 0" class="empty-state">
+      <mat-icon>medical_services</mat-icon>
+      <p>Aucun médecin trouvé</p>
+    </div>
+  </div>
+
+  <app-pagination [totalPages]="totalPages" [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"></app-pagination>
+</div>

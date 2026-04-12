@@ -1,0 +1,16 @@
+<!-- → src/app/shared/components/pagination/pagination.html -->
+<div class="flex items-center justify-center gap-1 mt-5" *ngIf="totalPages > 1">
+  <button class="page-btn" (click)="goTo(currentPage - 1)" [disabled]="currentPage === 0">
+    <mat-icon>chevron_left</mat-icon>
+  </button>
+
+  <ng-container *ngFor="let p of pages">
+    <button class="page-btn" [class.active]="p === currentPage" (click)="goTo(p)">
+      {{ p + 1 }}
+    </button>
+  </ng-container>
+
+  <button class="page-btn" (click)="goTo(currentPage + 1)" [disabled]="currentPage === totalPages - 1">
+    <mat-icon>chevron_right</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,10 @@
+<!-- → src/app/shared/components/search-bar/search-bar.html -->
+<div class="search-wrapper">
+  <mat-icon>search</mat-icon>
+  <input [formControl]="searchControl" placeholder="Rechercher..."
+    class="flex-1 outline-none text-sm bg-transparent"/>
+  <button *ngIf="searchControl.value" mat-icon-button (click)="clear()"
+    style="width:24px;height:24px;line-height:24px">
+    <mat-icon style="font-size:16px;width:16px;height:16px;color:#94A3B8">close</mat-icon>
+  </button>
+</div>

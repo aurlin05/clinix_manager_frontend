@@ -1,0 +1,132 @@
+// → src/app/shared/components/confirm-dialog/confirm-dialog.scss
+@use 'sass:color';
+
+// Couleurs par type
+$dialog-types: (
+  'warning': (#F59E0B, #FEF3C7, #92400E),
+  'danger':  (#EF4444, #FEE2E2, #991B1B),
+  'info':    (#3B82F6, #DBEAFE, #1E40AF),
+  'success': (#10B981, #D1FAE5, #065F46),
+);
+
+.confirm-dialog {
+  padding: 28px 28px 24px;
+  text-align: center;
+  max-width: 360px;
+
+  @each $type, $colors in $dialog-types {
+    $icon-color: nth($colors, 1);
+    $bg-tint:    nth($colors, 2);
+    $text-color: nth($colors, 3);
+
+    &.confirm-#{$type} {
+      .dialog-icon-wrap-#{$type} {
+        .dialog-icon {
+          background: rgba($icon-color, 0.12);
+          border-color: rgba($icon-color, 0.2);
+
+          mat-icon { color: $icon-color; }
+        }
+      }
+
+      .btn-confirm-#{$type} {
+        background: $icon-color;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background: color.adjust($icon-color, $lightness: -10%);
+          box-shadow: 0 4px 14px rgba($icon-color, 0.4);
+        }
+      }
+    }
+  }
+}
+
+.dialog-icon-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.dialog-icon {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: rgba(239,68,68,0.08);
+  border: 1.5px solid rgba(239,68,68,0.15);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-warn 1.8s ease-in-out infinite;
+
+  mat-icon {
+    font-size: 28px; width: 28px; height: 28px;
+    color: #EF4444;
+  }
+}
+
+@keyframes pulse-warn {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.15); }
+  50%       { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
+}
+
+.dialog-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+
+.dialog-message {
+  font-size: 14px;
+  color: #64748B;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-cancel {
+  flex: 1;
+  height: 42px;
+  border-radius: 10px;
+  border: 1.5px solid #E2E8F0;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+
+  &:hover { background: #F8FAFC; border-color: #CBD5E1; }
+}
+
+.btn-confirm {
+  flex: 1;
+  height: 42px;
+  border-radius: 10px;
+  border: none;
+  background: #EF4444;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(239,68,68,0.3);
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+
+  &:hover {
+    background: #DC2626;
+    box-shadow: 0 4px 14px rgba(239,68,68,0.4);
+    transform: translateY(-1px);
+  }
+}

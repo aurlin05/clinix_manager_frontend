@@ -1,0 +1,120 @@
+<!-- → src/app/app.html -->
+<div class="app-shell" *ngIf="isLoggedIn && !isAuthRoute; else authOutlet">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" *ngIf="sidebarOpen" (click)="sidebarOpen = false"></div>
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" [class.sidebar-collapsed]="sidebarCollapsed" [class.sidebar-open]="sidebarOpen">
+
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v18M3 12h18" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-brand" *ngIf="!sidebarCollapsed">
+        <span class="logo-name">Clinix</span>
+        <span class="logo-tag">Manager</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="nav-active"
+        class="nav-item"
+        (click)="sidebarOpen = false"
+        [matTooltip]="sidebarCollapsed ? item.label : ''"
+        matTooltipPosition="right">
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label" *ngIf="!sidebarCollapsed">{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer" *ngIf="!sidebarCollapsed">
+      <div class="user-avatar">{{ userInitials }}</div>
+      <div class="flex-1 min-w-0">
+        <p class="user-name">{{ currentUser?.username }}</p>
+        <p class="user-role">{{ roleLabel }}</p>
+      </div>
+      <button mat-icon-button (click)="logout()" matTooltip="Déconnexion" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+    <div class="sidebar-footer-collapsed" *ngIf="sidebarCollapsed">
+      <button mat-icon-button (click)="logout()" matTooltip="Déconnexion" matTooltipPosition="right" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main-content" [class.main-collapsed]="sidebarCollapsed">
+
+    <!-- ════════════════ HEADER ════════════════ -->
+    <header class="app-header">
+
+      <!-- Accent top bar -->
+      <div class="header-accent"></div>
+
+      <!-- Left — toggle + page info -->
+      <div class="header-left">
+        <button mat-icon-button class="header-btn" (click)="toggleSidebar()">
+          <mat-icon>{{ sidebarCollapsed ? 'menu_open' : 'menu' }}</mat-icon>
+        </button>
+
+        <div class="header-page-info">
+          <div class="header-page-icon">
+            <mat-icon>{{ routeIcon }}</mat-icon>
+          </div>
+          <div class="hidden sm:block">
+            <p class="header-page-title">{{ currentRoute }}</p>
+            <p class="header-page-sub">{{ routeSubtitle }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center — search -->
+      <div class="header-search hidden md:flex">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input class="search-input" placeholder="Recherche rapide…" readonly/>
+        <span class="search-kbd">Ctrl K</span>
+      </div>
+
+      <!-- Right — notifs + user -->
+      <div class="header-right">
+        <!-- Notifications -->
+        <button class="notif-btn" matTooltip="Notifications">
+          <mat-icon>notifications_none</mat-icon>
+          <span class="notif-badge" *ngIf="notifCount > 0">{{ notifCount }}</span>
+        </button>
+
+        <!-- Separator -->
+        <div class="header-sep"></div>
+
+        <!-- User -->
+        <div class="user-chip">
+          <div class="user-chip-avatar">{{ userInitials }}</div>
+          <div class="hidden sm:flex flex-col leading-tight">
+            <span class="chip-name">{{ currentUser?.username }}</span>
+            <span class="chip-role">{{ roleLabel }}</span>
+          </div>
+          <mat-icon class="chip-arrow hidden sm:block">expand_more</mat-icon>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Page content -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<ng-template #authOutlet>
+  <router-outlet></router-outlet>
+</ng-template>
+
+<app-toast-container></app-toast-container>

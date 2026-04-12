@@ -1,0 +1,88 @@
+<!-- → src/app/modules/utilisateurs/utilisateur-form/utilisateur-form.html -->
+<div @scaleIn class="fd">
+
+  <div class="fd-header">
+    <div class="fd-accent"></div>
+    <div class="fd-header-body">
+      <div class="fd-icon" [style.background]="isEdit ? 'linear-gradient(135deg,#8B5CF6,#A78BFA)' : 'linear-gradient(135deg,#DC2626,#F87171)'">
+        <mat-icon style="font-size:20px;width:20px;height:20px;color:white;line-height:20px">
+          {{ isEdit ? 'manage_accounts' : 'person_add' }}
+        </mat-icon>
+      </div>
+      <div class="fd-titles">
+        <h2>{{ isEdit ? 'Modifier le compte' : 'Nouveau compte' }}</h2>
+        <p>{{ isEdit ? 'Modifier les informations et les droits' : 'Créer un compte et définir le rôle' }}</p>
+      </div>
+      <button class="fd-x" (click)="dialogRef.close(false)" type="button">
+        <mat-icon style="font-size:20px;width:20px;height:20px;line-height:20px">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-dialog-content class="fd-content">
+    <form [formGroup]="form" class="fd-grid">
+
+      <div class="fd-field">
+        <label>Nom d'utilisateur <span class="req">*</span></label>
+        <input formControlName="username" placeholder="jean.dupont" autocomplete="off"/>
+        <span class="fd-err" *ngIf="f['username'].invalid && f['username'].touched">
+          {{ f['username'].hasError('required') ? 'Champ requis' : 'Minimum 3 caractères' }}
+        </span>
+      </div>
+
+      <div class="fd-field">
+        <label>
+          Mot de passe
+          <span class="req" *ngIf="!isEdit">*</span>
+          <span class="fd-opt" *ngIf="isEdit">(laisser vide pour ne pas changer)</span>
+        </label>
+        <input formControlName="password" type="password" placeholder="{{ isEdit ? '••••••' : 'Minimum 6 caractères' }}"/>
+        <span class="fd-err" *ngIf="f['password'].invalid && f['password'].touched">Minimum 6 caractères</span>
+      </div>
+
+      <!-- Sélecteur de rôle -->
+      <div class="fd-field fd-span2">
+        <label>Rôle <span class="req">*</span></label>
+        <div class="fd-role-grid">
+          <button *ngFor="let r of roles" type="button"
+            class="fd-role-btn"
+            [class.fd-role-btn-active]="form.get('role')?.value === r.value"
+            [style.--role-color]="r.color"
+            (click)="form.patchValue({ role: r.value })">
+            <mat-icon style="font-size:18px;width:18px;height:18px;line-height:18px">{{ r.icon }}</mat-icon>
+            <span>{{ r.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sélecteur médecin (visible si rôle = MEDECIN) -->
+      <div class="fd-field fd-span2" *ngIf="isMedecin">
+        <label>Profil médecin lié <span class="req">*</span></label>
+        <select formControlName="medecinId">
+          <option [ngValue]="null" disabled>Sélectionner un médecin...</option>
+          <option *ngFor="let m of medecins" [ngValue]="m.id">
+            Dr. {{ m.prenom }} {{ m.nom }} — {{ m.specialite }}
+          </option>
+        </select>
+        <span class="fd-err" *ngIf="f['medecinId'].invalid && f['medecinId'].touched">Sélection requise</span>
+        <p class="fd-hint" *ngIf="medecins.length === 0">
+          Aucun profil médecin disponible. Créez d'abord un médecin depuis la section Médecins.
+        </p>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <div class="fd-footer">
+    <button class="fd-cancel" (click)="dialogRef.close(false)" type="button">Annuler</button>
+    <button class="fd-submit" (click)="submit()" [disabled]="loading" type="button"
+      [style.background]="isEdit ? 'linear-gradient(135deg,#8B5CF6,#A78BFA)' : 'linear-gradient(135deg,#DC2626,#F87171)'">
+      <ng-container *ngIf="!loading">
+        <mat-icon style="font-size:18px;width:18px;height:18px;line-height:18px">{{ isEdit ? 'save' : 'add_circle_outline' }}</mat-icon>
+        {{ isEdit ? 'Enregistrer' : 'Créer le compte' }}
+      </ng-container>
+      <span *ngIf="loading" class="fd-spinner"></span>
+    </button>
+  </div>
+
+</div>

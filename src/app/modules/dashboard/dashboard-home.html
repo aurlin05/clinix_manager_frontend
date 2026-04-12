@@ -1,0 +1,260 @@
+<!-- → src/app/modules/dashboard/dashboard-home.html -->
+<div @fadeInUp class="dash-page">
+
+  <!-- ══ WELCOME BANNER — MÉDECIN ══ -->
+  <div class="welcome-banner medecin-banner" *ngIf="isMedecin">
+    <div class="wb-deco wb-deco-1"></div>
+    <div class="wb-deco wb-deco-2"></div>
+
+    <div class="wb-left">
+      <div class="wb-avatar medecin-avatar">
+        <mat-icon style="font-size:26px;width:26px;height:26px;color:white;line-height:26px">stethoscope</mat-icon>
+      </div>
+      <div>
+        <p class="wb-greeting">{{ greeting }},&nbsp;<strong>{{ displayName }}</strong> 👨‍⚕️</p>
+        <p class="wb-date">
+          <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle;color:rgba(167,243,208,0.8)">calendar_today</mat-icon>
+          {{ today | date:'EEEE dd MMMM yyyy' : '' : 'fr-FR' }}
+          &nbsp;·&nbsp;
+          <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle;color:rgba(167,243,208,0.8)">schedule</mat-icon>
+          {{ today | date:'HH:mm' }}
+        </p>
+        <p class="wb-role-badge">
+          <mat-icon style="font-size:12px;width:12px;height:12px;vertical-align:middle">verified</mat-icon>
+          Médecin — Vue personnelle
+        </p>
+      </div>
+    </div>
+
+    <div class="wb-stats medecin-stats">
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvAujourdhui') }}</span>
+        <span class="wb-stat-lbl">Mes RDV du jour</span>
+      </div>
+      <div class="wb-divider"></div>
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvEnAttente') }}</span>
+        <span class="wb-stat-lbl">En attente</span>
+      </div>
+      <div class="wb-divider"></div>
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvConfirmes') }}</span>
+        <span class="wb-stat-lbl">Confirmés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WELCOME BANNER — ADMIN / USER ══ -->
+  <div class="welcome-banner" *ngIf="!isMedecin">
+    <div class="wb-deco wb-deco-1"></div>
+    <div class="wb-deco wb-deco-2"></div>
+
+    <div class="wb-left">
+      <div class="wb-avatar">
+        <mat-icon style="font-size:26px;width:26px;height:26px;color:white;line-height:26px">local_hospital</mat-icon>
+      </div>
+      <div>
+        <p class="wb-greeting">{{ greeting }},&nbsp;<strong>Clinix Manager</strong> 👋</p>
+        <p class="wb-date">
+          <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle;color:rgba(147,197,253,0.8)">calendar_today</mat-icon>
+          {{ today | date:'EEEE dd MMMM yyyy' : '' : 'fr-FR' }}
+          &nbsp;·&nbsp;
+          <mat-icon style="font-size:13px;width:13px;height:13px;vertical-align:middle;color:rgba(147,197,253,0.8)">schedule</mat-icon>
+          {{ today | date:'HH:mm' }}
+        </p>
+      </div>
+    </div>
+
+    <div class="wb-stats">
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvAujourdhui') }}</span>
+        <span class="wb-stat-lbl">RDV ce jour</span>
+      </div>
+      <div class="wb-divider"></div>
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvEnAttente') }}</span>
+        <span class="wb-stat-lbl">En attente</span>
+      </div>
+      <div class="wb-divider"></div>
+      <div class="wb-stat">
+        <span class="wb-stat-val">{{ getValue('rdvConfirmes') }}</span>
+        <span class="wb-stat-lbl">Confirmés</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ KPI CARDS — skeleton ══ -->
+  <div class="kpi-grid" *ngIf="loading">
+    <div *ngFor="let i of [0,1,2,3]" class="kpi-card kpi-card-skel">
+      <div class="skel skel-stripe"></div>
+      <div class="kpi-inner">
+        <div class="skel skel-icon"></div>
+        <div class="kpi-text">
+          <div class="skel skel-lbl"></div>
+          <div class="skel skel-val"></div>
+        </div>
+      </div>
+      <div class="kpi-foot"><div class="skel skel-trend"></div></div>
+    </div>
+  </div>
+
+  <!-- ══ KPI CARDS — data ══ -->
+  <div class="kpi-grid" *ngIf="!loading">
+    <div *ngFor="let kpi of kpis" class="kpi-card">
+      <div class="kpi-stripe" [style.background]="kpi.gradient"></div>
+      <div class="kpi-inner">
+        <div class="kpi-icon-box" [style.background]="kpi.gradient">
+          <mat-icon style="font-size:22px;width:22px;height:22px;color:white;line-height:22px;display:block">{{ kpi.icon }}</mat-icon>
+        </div>
+        <div class="kpi-text">
+          <p class="kpi-lbl">{{ kpi.label }}</p>
+          <p class="kpi-val">{{ getValue(kpi.key) }}</p>
+        </div>
+      </div>
+      <div class="kpi-foot">
+        <span class="trend" [class.trend-up]="kpi.trendUp" [class.trend-dn]="!kpi.trendUp">
+          <mat-icon style="font-size:14px;width:14px;height:14px;line-height:14px;vertical-align:middle">
+            {{ kpi.trendUp ? 'trending_up' : 'trending_down' }}
+          </mat-icon>
+          {{ kpi.trend }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ QUICK ACTIONS ══ -->
+  <p class="section-lbl">Actions rapides</p>
+  <div class="qa-grid">
+    <div *ngFor="let a of quickActions" class="qa-card" (click)="a.action()">
+      <div class="qa-icon" [style.background]="a.bg">
+        <mat-icon [style.color]="a.color" style="font-size:22px;width:22px;height:22px;line-height:22px;display:block">{{ a.icon }}</mat-icon>
+      </div>
+      <span class="qa-lbl">{{ a.label }}</span>
+      <mat-icon class="qa-arr" style="font-size:18px;width:18px;height:18px;line-height:18px">arrow_forward</mat-icon>
+    </div>
+
+    <!-- Accès rapide à la liste des RDV pour le médecin -->
+    <a *ngIf="isMedecin" routerLink="/rendez-vous" class="qa-card qa-card-nav">
+      <div class="qa-icon" style="background:#F5F3FF">
+        <mat-icon style="color:#6366F1;font-size:22px;width:22px;height:22px;line-height:22px;display:block">list_alt</mat-icon>
+      </div>
+      <span class="qa-lbl">Mes rendez-vous</span>
+      <mat-icon class="qa-arr" style="font-size:18px;width:18px;height:18px;line-height:18px">arrow_forward</mat-icon>
+    </a>
+  </div>
+
+  <!-- ══ CHARTS ══ -->
+  <p class="section-lbl">Statistiques</p>
+
+  <!-- charts skeleton -->
+  <div class="charts-grid" *ngIf="loading">
+    <div class="chart-card" *ngFor="let i of [0,1]">
+      <div class="chart-hd">
+        <div class="skel skel-chart-icon"></div>
+        <div style="flex:1"><div class="skel skel-chart-title"></div><div class="skel skel-chart-sub" style="margin-top:6px"></div></div>
+      </div>
+      <div class="skel skel-chart-body"></div>
+    </div>
+  </div>
+
+  <!-- charts data : ADMIN / USER -->
+  <div class="charts-grid" *ngIf="!loading && !isMedecin">
+
+    <div class="chart-card">
+      <div class="chart-hd">
+        <div class="chart-hd-icon" style="background:#EFF6FF">
+          <mat-icon style="font-size:19px;width:19px;height:19px;color:#2563EB;line-height:19px">donut_large</mat-icon>
+        </div>
+        <div>
+          <p class="chart-title">Répartition des RDV</p>
+          <p class="chart-sub">Distribution par statut</p>
+        </div>
+      </div>
+      <div class="chart-body chart-centered">
+        <canvas baseChart [data]="pieData" [options]="pieOptions" type="pie" style="max-height:260px"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-hd">
+        <div class="chart-hd-icon" style="background:#ECFDF5">
+          <mat-icon style="font-size:19px;width:19px;height:19px;color:#10B981;line-height:19px">bar_chart</mat-icon>
+        </div>
+        <div>
+          <p class="chart-title">Top 5 médecins</p>
+          <p class="chart-sub">Par nombre de rendez-vous</p>
+        </div>
+      </div>
+      <div class="chart-body">
+        <canvas baseChart [data]="barData" [options]="barOptions" type="bar" style="max-height:260px"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- charts data : MÉDECIN ══ -->
+  <div class="charts-grid medecin-charts-grid" *ngIf="!loading && isMedecin">
+
+    <!-- Pie chart -->
+    <div class="chart-card">
+      <div class="chart-hd">
+        <div class="chart-hd-icon" style="background:#F0F9FF">
+          <mat-icon style="font-size:19px;width:19px;height:19px;color:#0EA5E9;line-height:19px">donut_large</mat-icon>
+        </div>
+        <div>
+          <p class="chart-title">Mes rendez-vous</p>
+          <p class="chart-sub">Répartition par statut</p>
+        </div>
+      </div>
+      <div class="chart-body chart-centered">
+        <canvas baseChart [data]="pieData" [options]="pieOptions" type="pie" style="max-height:260px"></canvas>
+      </div>
+    </div>
+
+    <!-- Récapitulatif statuts -->
+    <div class="chart-card recap-card">
+      <div class="chart-hd">
+        <div class="chart-hd-icon" style="background:#EEF2FF">
+          <mat-icon style="font-size:19px;width:19px;height:19px;color:#6366F1;line-height:19px">analytics</mat-icon>
+        </div>
+        <div>
+          <p class="chart-title">Récapitulatif</p>
+          <p class="chart-sub">Détail de mon activité</p>
+        </div>
+      </div>
+
+      <!-- Total -->
+      <div class="recap-total">
+        <span class="recap-total-val">{{ totalRdv }}</span>
+        <span class="recap-total-lbl">rendez-vous au total</span>
+      </div>
+
+      <!-- Statut rows -->
+      <div class="recap-list">
+        <div *ngFor="let s of statutItems" class="recap-row">
+          <div class="recap-row-left">
+            <div class="recap-dot" [style.background]="s.color"></div>
+            <mat-icon class="recap-icon" [style.color]="s.color"
+              style="font-size:16px;width:16px;height:16px;line-height:16px">{{ s.icon }}</mat-icon>
+            <span class="recap-label">{{ s.label }}</span>
+          </div>
+          <div class="recap-row-right">
+            <span class="recap-count" [style.color]="s.color">{{ getValue(s.key) }}</span>
+            <div class="recap-bar-wrap">
+              <div class="recap-bar-fill" [style.background]="s.color"
+                [style.width.%]="getPercent(s.key)"></div>
+            </div>
+            <span class="recap-pct">{{ getPercent(s.key) }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info banner -->
+      <div class="recap-info">
+        <mat-icon style="font-size:14px;width:14px;height:14px;line-height:14px;color:#6366F1">info</mat-icon>
+        <span>Les données affichées concernent uniquement vos rendez-vous.</span>
+      </div>
+    </div>
+
+  </div>
+</div>

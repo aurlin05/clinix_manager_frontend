@@ -1,0 +1,189 @@
+// → src/app/modules/rendez-vous/components/rdv-list/rdv-list.scss
+
+// ── Page layout ───────────────────────────────────────────
+.list-page {
+  padding: 28px;
+  @media (max-width: 640px) { padding: 16px; }
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.page-subtitle {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 4px 0 0;
+}
+
+// ── Filter chips ──────────────────────────────────────────
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1.5px solid var(--color-border);
+  background: white;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition);
+
+  &:hover { background: #F8FAFC; border-color: #CBD5E1; }
+
+  &-active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+  }
+}
+
+.chip-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.loading-bar {
+  border-radius: 4px;
+  margin-bottom: 8px;
+  height: 3px !important;
+}
+
+// ── Table card ────────────────────────────────────────────
+.table-card {
+  background: white;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+.table-row {
+  transition: background 0.12s ease;
+  &:hover {
+    background: #F0F7FF;
+    .row-actions { opacity: 1; }
+  }
+}
+
+.row-actions {
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.action-btn {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.action-edit {
+  color: var(--color-primary) !important;
+  &:hover { background: rgba(37,99,235,0.08) !important; }
+}
+
+.action-delete {
+  color: #EF4444 !important;
+  &:hover { background: rgba(239,68,68,0.08) !important; }
+}
+
+// ── Date block ────────────────────────────────────────────
+.date-block {
+  line-height: 1.3;
+}
+
+.date-day {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.date-time {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+// ── Cell helpers ──────────────────────────────────────────
+.cell-primary {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.cell-secondary {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.motif-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Status badge ──────────────────────────────────────────
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &.badge-yellow { background: rgba(245,158,11,0.1);  color: #d97706; }
+  &.badge-green  { background: rgba(16,185,129,0.1);  color: #059669; }
+  &.badge-red    { background: rgba(239,68,68,0.1);   color: #dc2626; }
+  &.badge-gray   { background: rgba(100,116,139,0.1); color: #475569; }
+}
+
+// ── Empty state ───────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 64px 0;
+  color: #94A3B8;
+
+  mat-icon {
+    font-size: 52px;
+    width: 52px; height: 52px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  p { font-size: 14px; margin: 0; }
+}

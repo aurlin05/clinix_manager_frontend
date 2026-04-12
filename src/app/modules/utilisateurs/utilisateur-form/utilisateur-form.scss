@@ -1,0 +1,128 @@
+// → src/app/modules/utilisateurs/utilisateur-form/utilisateur-form.scss
+:host { display: block; }
+
+$border:  #E2E8F0;
+$focus:   #DC2626;
+$err:     #EF4444;
+$text:    #0F172A;
+$radius:  10px;
+
+.fd { display: flex; flex-direction: column; background: white; border-radius: 18px; overflow: hidden; }
+
+.fd-header { background: white; }
+.fd-accent { height: 3px; background: linear-gradient(90deg, #DC2626 0%, #8B5CF6 50%, #10B981 100%); }
+.fd-header-body {
+  display: flex; align-items: center; gap: 14px;
+  padding: 18px 20px 16px;
+}
+.fd-icon {
+  width: 44px; height: 44px; border-radius: 13px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.fd-titles {
+  flex: 1;
+  h2 { margin: 0; font-size: 16px; font-weight: 700; color: $text; }
+  p  { margin: 2px 0 0; font-size: 12px; color: #64748B; }
+}
+.fd-x {
+  width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid $border;
+  background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: #94A3B8; transition: all 0.15s ease;
+  &:hover { background: #FEF2F2; border-color: #FECACA; color: $err; }
+}
+
+.fd-content { padding: 0 20px 8px !important; max-height: 60vh; overflow-y: auto; }
+
+.fd-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 16px 0;
+}
+.fd-span2 { grid-column: span 2; }
+
+.fd-field {
+  display: flex; flex-direction: column; gap: 6px;
+
+  label {
+    font-size: 12px; font-weight: 600; color: #475569;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  input, select {
+    height: 42px; padding: 0 14px;
+    border: 1.5px solid $border; border-radius: $radius;
+    background: white; font-size: 13px; color: $text;
+    font-family: inherit; outline: none; width: 100%; box-sizing: border-box;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus { border-color: $focus; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
+    &::placeholder { color: #CBD5E1; }
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%2394A3B8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    padding-right: 36px; cursor: pointer;
+  }
+}
+
+.req { color: $err; }
+.fd-opt { font-size: 10px; color: #94A3B8; font-weight: 400; }
+.fd-err { font-size: 11px; color: $err; font-weight: 500; }
+.fd-hint { font-size: 11.5px; color: #64748B; margin: 0; line-height: 1.4; }
+
+// ── Rôle selector ───────────────────────────────
+.fd-role-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+
+.fd-role-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 14px 10px; border-radius: 12px;
+  border: 2px solid $border; background: #F8FAFC;
+  cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600; color: #64748B;
+  transition: all 0.15s ease;
+
+  mat-icon { color: #94A3B8; transition: color 0.15s ease; }
+
+  &:hover {
+    border-color: var(--role-color);
+    background: white;
+    color: var(--role-color);
+    mat-icon { color: var(--role-color); }
+  }
+
+  &.fd-role-btn-active {
+    border-color: var(--role-color);
+    background: white;
+    color: var(--role-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--role-color) 12%, transparent);
+    mat-icon { color: var(--role-color); }
+  }
+}
+
+// ── Footer ──────────────────────────────────────
+.fd-footer {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid $border; background: #FAFAFA;
+}
+.fd-cancel {
+  height: 40px; padding: 0 18px; border: 1.5px solid $border; border-radius: $radius;
+  background: white; font-size: 13px; font-weight: 500; color: #475569;
+  cursor: pointer; font-family: inherit; transition: all 0.15s ease;
+  &:hover { background: #F8FAFC; border-color: #CBD5E1; color: $text; }
+}
+.fd-submit {
+  height: 40px; padding: 0 20px; border: none; border-radius: $radius;
+  color: white; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s ease;
+  &:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  &:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.fd-spinner {
+  width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin 0.7s linear infinite; display: inline-block;
+}

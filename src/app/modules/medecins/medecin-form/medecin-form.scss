@@ -1,0 +1,157 @@
+// → src/app/modules/medecins/components/medecin-form/medecin-form.scss
+:host { display: block; }
+
+$border:  #E2E8F0;
+$focus:   #10B981;
+$err:     #EF4444;
+$text:    #0F172A;
+$sub:     #64748B;
+$radius:  10px;
+
+.fd { display: flex; flex-direction: column; background: white; border-radius: 18px; overflow: hidden; }
+
+.fd-header { background: white; }
+.fd-accent { height: 3px; background: linear-gradient(90deg, #10B981 0%, #0ea5e9 50%, #8B5CF6 100%); }
+.fd-header-body {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.fd-icon {
+  width: 42px; height: 42px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(16,185,129,0.25);
+}
+.fd-titles {
+  flex: 1;
+  h2 { font-size: 15px; font-weight: 700; color: $text; margin: 0; letter-spacing: -0.01em; }
+  p  { font-size: 12px; color: $sub; margin: 2px 0 0; }
+}
+.fd-x {
+  width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #94A3B8; transition: all 0.15s ease; flex-shrink: 0;
+  &:hover { background: #F1F5F9; color: $text; }
+}
+
+.fd-content {
+  padding: 20px 20px 8px !important;
+  max-height: 60vh; overflow-y: auto;
+  &::-webkit-scrollbar { width: 5px; }
+  &::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+}
+
+.fd-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px;
+  @media (max-width: 500px) { grid-template-columns: 1fr; }
+}
+.fd-span2 { grid-column: span 2; @media (max-width: 500px) { grid-column: span 1; } }
+
+.fd-field { display: flex; flex-direction: column; gap: 5px; }
+
+label { font-size: 12px; font-weight: 600; color: #475569; letter-spacing: 0.02em; }
+.req { color: $err; margin-left: 2px; }
+
+input, select {
+  height: 42px; padding: 0 13px;
+  border: 1.5px solid $border; border-radius: $radius;
+  font-size: 13px; font-family: inherit; color: $text; background: #FAFAFA;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  outline: none; width: 100%; box-sizing: border-box;
+  &::placeholder { color: #CBD5E1; }
+  &:focus { border-color: $focus; background: white; box-shadow: 0 0 0 3px rgba(16,185,129,0.08); }
+}
+select {
+  cursor: pointer; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 13px center; padding-right: 36px;
+}
+
+.fd-err { font-size: 11px; color: $err; margin-top: -2px; }
+
+// ── Toggle ──────────────────────────────────────────────────
+.fd-toggle-wrap { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+
+.fd-toggle {
+  width: 44px; height: 24px; border-radius: 12px;
+  background: #E2E8F0; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s ease;
+  flex-shrink: 0;
+  &.fd-toggle-on { background: #10B981; }
+}
+.fd-toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+  .fd-toggle-on & { transform: translateX(20px); }
+}
+.fd-toggle-lbl { font-size: 13px; color: $sub; font-weight: 500; }
+
+// ── Footer ──────────────────────────────────────────────────
+.fd-footer {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid #F1F5F9;
+}
+.fd-cancel {
+  height: 40px; padding: 0 18px; border: 1.5px solid $border; border-radius: $radius;
+  background: white; font-size: 13px; font-weight: 500; color: #475569;
+  cursor: pointer; font-family: inherit; transition: all 0.15s ease;
+  &:hover { background: #F8FAFC; border-color: #CBD5E1; color: $text; }
+}
+.fd-submit {
+  height: 40px; padding: 0 20px; border: none; border-radius: $radius;
+  color: white; font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; display: flex; align-items: center; gap: 6px;
+  transition: all 0.15s ease; box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+  &:hover:not(:disabled) { box-shadow: 0 4px 16px rgba(16,185,129,0.4); transform: translateY(-1px); }
+  &:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.fd-spinner {
+  width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white; border-radius: 50%;
+  animation: spin 0.7s linear infinite; display: inline-block;
+}
+
+// ── Section compte d'accès ────────────────────────────────────────────────
+.fd-account-section {
+  margin: 0 24px 8px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.fd-account-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; background: #F8FAFC; border: none; cursor: pointer;
+  font-family: inherit; transition: background 0.15s ease;
+  &:hover { background: #F1F5F9; }
+}
+
+.fd-account-toggle-left { display: flex; align-items: center; gap: 12px; }
+
+.fd-account-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #ECFDF5; border: 1px solid #A7F3D0;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.fd-account-title {
+  display: block; font-size: 13px; font-weight: 600; color: #0F172A; text-align: left;
+}
+.fd-account-sub {
+  display: block; font-size: 11px; color: #64748B; margin-top: 1px; text-align: left;
+}
+
+.fd-account-chevron {
+  transition: transform 0.2s ease;
+  &.fd-account-chevron-open { transform: rotate(180deg); }
+}
+
+.fd-account-fields {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  padding: 16px; border-top: 1px solid #E2E8F0; background: white;
+}

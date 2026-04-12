@@ -1,0 +1,361 @@
+// → src/app/modules/auth/login/login.scss
+
+// ── Mise en page split ─────────────────────────────────────
+.auth-page {
+  display: flex;
+  min-height: 100vh;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PANNEAU GAUCHE — branding
+// ═══════════════════════════════════════════════════════════
+.auth-left {
+  width: 52%;
+  background: linear-gradient(155deg, #060f24 0%, #0d2048 30%, #1240a0 65%, #1e56d4 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 52px;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 900px) { display: none; }
+}
+
+// Cercles décoratifs
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.deco-1 {
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
+  top: -160px; right: -140px;
+  animation: pulse-deco 8s ease-in-out infinite;
+}
+
+.deco-2 {
+  width: 340px; height: 340px;
+  background: radial-gradient(circle, rgba(14,165,233,0.18) 0%, transparent 70%);
+  bottom: -100px; left: -80px;
+  animation: pulse-deco 11s ease-in-out infinite reverse;
+}
+
+.deco-3 {
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(129,140,248,0.2) 0%, transparent 70%);
+  top: 50%; left: 42%;
+  animation: pulse-deco 14s ease-in-out infinite;
+}
+
+@keyframes pulse-deco {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  50%       { transform: scale(1.12) translate(15px, -12px); }
+}
+
+// Logo gauche
+.left-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.left-logo-icon {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.left-logo-name {
+  color: white;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+// Illustration
+.left-illustration {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  padding: 20px 0;
+}
+
+// Tagline
+.left-tagline {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 28px;
+
+  h2 {
+    color: white;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+
+  .tagline-highlight {
+    background: linear-gradient(90deg, #93C5FD, #67E8F9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    color: rgba(147,197,253,0.75);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 360px;
+  }
+}
+
+// Features
+.left-features {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+
+.feature-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #60A5FA, #34D399);
+  flex-shrink: 0;
+}
+
+// ═══════════════════════════════════════════════════════════
+// PANNEAU DROIT — formulaire
+// ═══════════════════════════════════════════════════════════
+.auth-right {
+  flex: 1;
+  background: #FAFBFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+
+.auth-form-wrap {
+  width: 100%;
+  max-width: 400px;
+}
+
+// En-tête formulaire
+.form-header {
+  margin-bottom: 32px;
+}
+
+.form-logo-sm {
+  width: 42px; height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.35);
+}
+
+.form-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 6px;
+  letter-spacing: -0.025em;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: #64748B;
+  margin: 0;
+}
+
+// Formulaire custom (sans Angular Material)
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.field-wrap {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 0 14px;
+  height: 48px;
+  transition: all 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+  &:focus-within {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+  }
+
+  &.field-error {
+    border-color: #EF4444;
+    &:focus-within { box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+  }
+}
+
+.field-icon-left {
+  font-size: 18px; width: 18px; height: 18px;
+  color: #94A3B8;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.field-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0F172A;
+  background: transparent;
+
+  &::placeholder { color: #CBD5E1; }
+}
+
+.field-icon-right {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #94A3B8;
+  display: flex; align-items: center;
+  border-radius: 6px;
+  transition: all 0.15s;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &:hover { color: #475569; background: #F1F5F9; }
+}
+
+.field-err-msg {
+  font-size: 12px;
+  color: #EF4444;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    content: '!';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #EF4444;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+  }
+}
+
+.form-options {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -6px;
+}
+
+.link-forgot {
+  font-size: 13px;
+  color: #3B82F6;
+  text-decoration: none;
+  font-weight: 500;
+  &:hover { text-decoration: underline; }
+}
+
+// Bouton submit
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 4px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(29,78,216,0.4);
+  letter-spacing: 0.01em;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: 0 8px 24px rgba(29,78,216,0.5);
+    transform: translateY(-1px);
+  }
+
+  &:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+  &.btn-loading { pointer-events: none; }
+
+  .btn-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.btn-spinner {
+  display: flex;
+  align-items: center;
+}
+
+.spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Lien switch
+.auth-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #64748B;
+  margin-top: 24px;
+}
+
+.auth-switch-link {
+  color: #1d4ed8;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 4px;
+  &:hover { text-decoration: underline; }
+}

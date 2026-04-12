@@ -1,0 +1,39 @@
+// → src/app/modules/utilisateurs/utilisateur-list/utilisateur-list.scss
+@use '../../medecins/medecin-list/medecin-list.scss' as *;
+
+// ── Spécifique utilisateurs ──────────────────────────────
+
+.role-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+}
+
+.self-badge {
+  display: inline-flex; align-items: center;
+  margin-left: 6px; padding: 1px 7px;
+  background: #EFF6FF; color: #2563EB;
+  font-size: 10px; font-weight: 700;
+  border-radius: 20px; letter-spacing: 0.02em;
+}
+
+.medecin-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 13px; color: #059669; font-weight: 500;
+}
+
+.cell-empty { color: #CBD5E1; font-size: 14px; }
+
+.action-btn:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #DC2626, #F87171) !important;
+  color: white !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px rgba(220,38,38,0.3) !important;
+  &:hover { box-shadow: 0 4px 16px rgba(220,38,38,0.4) !important; }
+}

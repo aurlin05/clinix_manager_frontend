@@ -1,0 +1,79 @@
+// → src/app/modules/auth/register/register.scss
+// Le register partage exactement le même style que le login.
+// On importe tout le SCSS de login (split layout + form).
+@use '../login/login.scss' as *;
+
+// Variante couleur gauche (teinte teal/violet pour différencier)
+.auth-left {
+  background: linear-gradient(155deg, #06101f 0%, #0d1f40 30%, #1a3a8a 65%, #2563eb 100%) !important;
+}
+
+.deco-1 {
+  background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, transparent 70%) !important;
+}
+
+.deco-2 {
+  background: radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 70%) !important;
+}
+
+.tagline-highlight {
+  background: linear-gradient(90deg, #A5B4FC, #6EE7B7) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.form-logo-sm {
+  background: linear-gradient(135deg, #4F46E5, #0EA5E9) !important;
+  box-shadow: 0 6px 18px rgba(79,70,229,0.35) !important;
+}
+
+.field-hint {
+  font-size: 11.5px;
+  color: #64748B;
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+.field-wrap-readonly {
+  background: #F8FAFC !important;
+  cursor: default;
+  pointer-events: none;
+}
+
+.field-readonly {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  padding: 0 14px 0 0;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #4F46E5 0%, #0EA5E9 100%) !important;
+  box-shadow: 0 4px 16px rgba(79,70,229,0.4) !important;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 8px 24px rgba(79,70,229,0.5) !important;
+  }
+}
+
+.auth-switch-link {
+  color: #4F46E5 !important;
+}
+
+.link-forgot { color: #4F46E5 !important; }
+
+// Champ select custom
+.field-select {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: #0F172A;
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  padding-right: 8px;
+}

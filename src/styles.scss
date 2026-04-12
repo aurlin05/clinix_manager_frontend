@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Angular Material theme
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+// ── Design tokens ─────────────────────────────────────────
+:root {
+  --color-primary:       #2563EB;
+  --color-primary-dark:  #1E3A5F;
+  --color-primary-light: #EFF6FF;
+  --color-accent:        #0EA5E9;
+  --color-success:       #10B981;
+  --color-warning:       #F59E0B;
+  --color-danger:        #EF4444;
+  --color-surface:       #FFFFFF;
+  --color-bg:            #F1F5F9;
+  --color-border:        #E2E8F0;
+  --color-text:          #0F172A;
+  --color-text-muted:    #64748B;
+  --radius-card:         18px;
+  --radius-btn:          10px;
+  --shadow-card:         0 1px 3px rgba(0,0,0,0.06), 0 8px 24px rgba(37,99,235,0.07);
+  --shadow-card-hover:   0 8px 32px rgba(37,99,235,0.18);
+  --transition:          all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ── Material overrides ────────────────────────────────────
+
+// Dialog
+.clinix-dialog .mat-mdc-dialog-container {
+  border-radius: var(--radius-card) !important;
+  padding: 0 !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
+}
+
+// Form field focus glow
+.mat-mdc-form-field.mat-focused .mdc-notched-outline {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+// Remove table row bottom border lines
+.mat-mdc-row, .mdc-data-table__row {
+  border-bottom-color: var(--color-border) !important;
+}
+
+// Snackbar — reset pour le custom toast
+.mat-mdc-snack-bar-container {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  min-width: unset !important;
+}
+
+.clinix-toast-panel {
+  .mat-mdc-snack-bar-container {
+    padding: 0 !important;
+    .mat-mdc-snack-bar-label { padding: 0 !important; }
+    .mdc-snackbar__surface {
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      min-width: unset !important;
+    }
+  }
+}
+
+// Progress bar color
+.mat-mdc-progress-bar .mdc-linear-progress__bar-inner {
+  border-color: var(--color-primary) !important;
+}
+
+// Tooltip
+.mat-mdc-tooltip {
+  font-size: 12px !important;
+  border-radius: 6px !important;
+}
+
+// ── Scrollbar ─────────────────────────────────────────────
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+// ── Global button helper ──────────────────────────────────
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent)) !important;
+  color: white !important;
+  border-radius: var(--radius-btn) !important;
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3) !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  transition: var(--transition) !important;
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.4) !important;
+    transform: translateY(-1px);
+  }
+}
+
+// ── Table header global ───────────────────────────────────
+th.mat-mdc-header-cell {
+  background: #F8FAFC !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.06em !important;
+  color: var(--color-text-muted) !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid var(--color-border) !important;
+}

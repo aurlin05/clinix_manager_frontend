@@ -1,0 +1,26 @@
+<!-- → src/app/shared/components/confirm-dialog/confirm-dialog.html -->
+<div @scaleIn class="confirm-dialog" [class]="'confirm-' + data.type">
+  <!-- Icône d'avertissement -->
+  <div class="dialog-icon-wrap" [class]="'dialog-icon-wrap-' + data.type">
+    <div class="dialog-icon">
+      <mat-icon>{{ icons[data.type!] }}</mat-icon>
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div class="dialog-body">
+    <h2 class="dialog-title">{{ data.title }}</h2>
+    <p class="dialog-message">{{ data.message }}</p>
+  </div>
+
+  <!-- Actions -->
+  <div class="dialog-actions">
+    <button class="btn-cancel" (click)="dialogRef.close(false)">
+      {{ data.cancelLabel || 'Annuler' }}
+    </button>
+    <button class="btn-confirm" [class]="'btn-confirm-' + data.type" (click)="dialogRef.close(true)">
+      <mat-icon>{{ data.type === 'danger' ? 'delete_outline' : 'check' }}</mat-icon>
+      {{ data.confirmLabel || 'Confirmer' }}
+    </button>
+  </div>
+</div>

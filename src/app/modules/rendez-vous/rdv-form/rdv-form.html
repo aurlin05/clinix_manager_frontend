@@ -1,0 +1,111 @@
+<!-- → src/app/modules/rendez-vous/components/rdv-form/rdv-form.html -->
+<div @scaleIn class="fd">
+
+  <!-- Header -->
+  <div class="fd-header">
+    <div class="fd-accent"></div>
+    <div class="fd-header-body">
+      <div class="fd-icon" [style.background]="isEdit ? 'linear-gradient(135deg,#8B5CF6,#A78BFA)' : 'linear-gradient(135deg,#8B5CF6,#A78BFA)'">
+        <mat-icon style="font-size:20px;width:20px;height:20px;color:white;line-height:20px">{{ isEdit ? 'edit_calendar' : 'calendar_month' }}</mat-icon>
+      </div>
+      <div class="fd-titles">
+        <h2>{{ isEdit ? 'Modifier le rendez-vous' : 'Nouveau rendez-vous' }}</h2>
+        <p>{{ isEdit ? 'Mettre à jour les informations' : 'Planifier une nouvelle consultation' }}</p>
+      </div>
+      <button class="fd-x" (click)="dialogRef.close(false)" type="button">
+        <mat-icon style="font-size:20px;width:20px;height:20px;line-height:20px">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="fd-content">
+    <form [formGroup]="form" class="fd-grid">
+
+      <!-- Patient -->
+      <div class="fd-field fd-span2">
+        <label>Patient <span class="req">*</span></label>
+        <div class="fd-autocomplete">
+          <mat-icon class="fd-ac-icon" style="font-size:16px;width:16px;height:16px;color:#94A3B8;line-height:16px">person</mat-icon>
+          <input formControlName="patientSearch" [matAutocomplete]="patientAuto"
+            placeholder="Rechercher un patient..." autocomplete="off"/>
+          <mat-autocomplete #patientAuto="matAutocomplete" (optionSelected)="selectPatient($event.option.value)">
+            <mat-option *ngFor="let p of getFilteredPatients()" [value]="p" class="fd-option">
+              <div class="fd-opt-main">{{ p.prenom }} {{ p.nom }}</div>
+              <div class="fd-opt-sub">{{ p.cin }}</div>
+            </mat-option>
+            <mat-option *ngIf="getFilteredPatients().length === 0" disabled class="fd-no-result">
+              Aucun patient trouvé
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <span class="fd-err" *ngIf="form.get('patientId')?.invalid && form.get('patientId')?.touched">Sélectionnez un patient</span>
+      </div>
+
+      <!-- Médecin -->
+      <div class="fd-field fd-span2">
+        <label>Médecin <span class="req">*</span></label>
+        <div class="fd-autocomplete">
+          <mat-icon class="fd-ac-icon" style="font-size:16px;width:16px;height:16px;color:#94A3B8;line-height:16px">medical_services</mat-icon>
+          <input formControlName="medecinSearch" [matAutocomplete]="medecinAuto"
+            placeholder="Rechercher un médecin..." autocomplete="off"/>
+          <mat-autocomplete #medecinAuto="matAutocomplete" (optionSelected)="selectMedecin($event.option.value)">
+            <mat-option *ngFor="let m of getFilteredMedecins()" [value]="m" class="fd-option">
+              <div class="fd-opt-main">Dr. {{ m.prenom }} {{ m.nom }}</div>
+              <div class="fd-opt-sub">{{ m.specialite }}</div>
+            </mat-option>
+            <mat-option *ngIf="getFilteredMedecins().length === 0" disabled class="fd-no-result">
+              Aucun médecin trouvé
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+        <span class="fd-err" *ngIf="form.get('medecinId')?.invalid && form.get('medecinId')?.touched">Sélectionnez un médecin</span>
+      </div>
+
+      <!-- Date & heure -->
+      <div class="fd-field">
+        <label>Date et heure <span class="req">*</span></label>
+        <input formControlName="dateHeure" type="datetime-local"/>
+        <span class="fd-err" *ngIf="f['dateHeure'].invalid && f['dateHeure'].touched">Champ requis</span>
+      </div>
+
+      <!-- Statut -->
+      <div class="fd-field">
+        <label>Statut <span class="req">*</span></label>
+        <select formControlName="statut">
+          <option value="EN_ATTENTE">⏳ En attente</option>
+          <option value="CONFIRME">✅ Confirmé</option>
+          <option value="ANNULE">❌ Annulé</option>
+          <option value="TERMINE">✔️ Terminé</option>
+        </select>
+      </div>
+
+      <!-- Motif -->
+      <div class="fd-field fd-span2">
+        <label>Motif de consultation <span class="req">*</span></label>
+        <input formControlName="motif" placeholder="Ex : Consultation de suivi, douleurs abdominales..."/>
+        <span class="fd-err" *ngIf="f['motif'].invalid && f['motif'].touched">Champ requis</span>
+      </div>
+
+      <!-- Notes -->
+      <div class="fd-field fd-span2">
+        <label>Notes additionnelles</label>
+        <textarea formControlName="notes" placeholder="Informations complémentaires, observations..." rows="3"></textarea>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="fd-footer">
+    <button class="fd-cancel" (click)="dialogRef.close(false)" type="button">Annuler</button>
+    <button class="fd-submit" (click)="submit()" [disabled]="loading" type="button">
+      <ng-container *ngIf="!loading">
+        <mat-icon style="font-size:18px;width:18px;height:18px;line-height:18px">{{ isEdit ? 'save' : 'add_circle_outline' }}</mat-icon>
+        {{ isEdit ? 'Enregistrer' : 'Créer le RDV' }}
+      </ng-container>
+      <span *ngIf="loading" class="fd-spinner"></span>
+    </button>
+  </div>
+
+</div>

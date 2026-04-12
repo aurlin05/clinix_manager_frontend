@@ -1,0 +1,98 @@
+<!-- → src/app/modules/patients/components/patient-form/patient-form.html -->
+<div @scaleIn class="fd">
+
+  <!-- Header -->
+  <div class="fd-header">
+    <div class="fd-accent"></div>
+    <div class="fd-header-body">
+      <div class="fd-icon" [style.background]="isEdit ? 'linear-gradient(135deg,#8B5CF6,#A78BFA)' : 'linear-gradient(135deg,#2563EB,#60A5FA)'">
+        <mat-icon style="font-size:20px;width:20px;height:20px;color:white;line-height:20px">{{ isEdit ? 'edit' : 'person_add' }}</mat-icon>
+      </div>
+      <div class="fd-titles">
+        <h2>{{ isEdit ? 'Modifier le patient' : 'Nouveau patient' }}</h2>
+        <p>{{ isEdit ? 'Mettre à jour le dossier patient' : 'Créer un nouveau dossier patient' }}</p>
+      </div>
+      <button class="fd-x" (click)="dialogRef.close(false)" type="button">
+        <mat-icon style="font-size:20px;width:20px;height:20px;line-height:20px">close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <mat-dialog-content class="fd-content">
+    <form [formGroup]="form" class="fd-grid">
+
+      <div class="fd-field">
+        <label>Prénom <span class="req">*</span></label>
+        <input formControlName="prenom" placeholder="Jean" autocomplete="off"/>
+        <span class="fd-err" *ngIf="f['prenom'].invalid && f['prenom'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field">
+        <label>Nom <span class="req">*</span></label>
+        <input formControlName="nom" placeholder="Dupont" autocomplete="off"/>
+        <span class="fd-err" *ngIf="f['nom'].invalid && f['nom'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field">
+        <label>Date de naissance <span class="req">*</span></label>
+        <input formControlName="dateNaissance" type="date"/>
+        <span class="fd-err" *ngIf="f['dateNaissance'].invalid && f['dateNaissance'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field">
+        <label>CIN <span class="req">*</span></label>
+        <input formControlName="cin" placeholder="AB123456" autocomplete="off"/>
+        <span class="fd-err" *ngIf="f['cin'].invalid && f['cin'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field">
+        <label>Email <span class="req">*</span></label>
+        <input formControlName="email" type="email" placeholder="jean.dupont@email.com"/>
+        <span class="fd-err" *ngIf="f['email'].invalid && f['email'].touched">Email invalide</span>
+      </div>
+
+      <div class="fd-field">
+        <label>Téléphone <span class="req">*</span></label>
+        <input formControlName="telephone" placeholder="+212 6XX XXX XXX"/>
+        <span class="fd-err" *ngIf="f['telephone'].invalid && f['telephone'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field">
+        <label>Sexe <span class="req">*</span></label>
+        <select formControlName="sexe">
+          <option value="M">Homme</option>
+          <option value="F">Femme</option>
+        </select>
+      </div>
+
+      <div class="fd-field">
+        <label>Groupe sanguin <span class="req">*</span></label>
+        <select formControlName="groupeSanguin">
+          <option value="" disabled>Sélectionner...</option>
+          <option *ngFor="let g of groupesSanguins" [value]="g">{{ g }}</option>
+        </select>
+        <span class="fd-err" *ngIf="f['groupeSanguin'].invalid && f['groupeSanguin'].touched">Champ requis</span>
+      </div>
+
+      <div class="fd-field fd-span2">
+        <label>Antécédents médicaux</label>
+        <textarea formControlName="antecedents" placeholder="Allergies, maladies chroniques, chirurgies..." rows="3"></textarea>
+      </div>
+
+    </form>
+  </mat-dialog-content>
+
+  <!-- Footer -->
+  <div class="fd-footer">
+    <button class="fd-cancel" (click)="dialogRef.close(false)" type="button">Annuler</button>
+    <button class="fd-submit" (click)="submit()" [disabled]="loading" type="button">
+      <ng-container *ngIf="!loading">
+        <mat-icon style="font-size:18px;width:18px;height:18px;line-height:18px">{{ isEdit ? 'save' : 'add_circle_outline' }}</mat-icon>
+        {{ isEdit ? 'Enregistrer' : 'Créer le patient' }}
+      </ng-container>
+      <span *ngIf="loading" class="fd-spinner"></span>
+    </button>
+  </div>
+
+</div>
