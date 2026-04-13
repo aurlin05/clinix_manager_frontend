@@ -1,5 +1,5 @@
 // → src/app/shared/components/search-bar/search-bar.ts
-import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +18,13 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   @Output() searchTerm = new EventEmitter<string>();
   searchControl = new FormControl('');
   private destroy$ = new Subject<void>();
+
+  /** Sync value from parent (e.g. global search) without re-emitting */
+  @Input() set term(v: string) {
+    if (v !== this.searchControl.value) {
+      this.searchControl.setValue(v, { emitEvent: false });
+    }
+  }
 
   ngOnInit(): void {
     this.searchControl.valueChanges.pipe(

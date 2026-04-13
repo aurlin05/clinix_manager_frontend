@@ -1,5 +1,5 @@
 // → src/app/modules/rendez-vous/components/rdv-list/rdv-list.ts
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,12 +8,16 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { RdvService } from '../../../core/services/rdv';
 import { RendezVous, StatutRDV } from '../../../shared/models/rendez-vous';
 import { RdvFormComponent } from '../rdv-form/rdv-form';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar';
 import { ToastService } from '../../../core/services/toast.service';
+import { GlobalSearchService } from '../../../core/services/global-search.service';
 import { fadeInUp, staggerList } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -22,19 +26,21 @@ import { fadeInUp, staggerList } from '../../../shared/animations/app.animations
   imports: [
     CommonModule, MatTableModule, MatButtonModule, MatIconModule,
     MatDialogModule, MatSnackBarModule, MatTooltipModule, MatProgressBarModule,
-    PaginationComponent
+    PaginationComponent, SearchBarComponent
   ],
   templateUrl: './rdv-list.html',
   styleUrls: ['./rdv-list.scss'],
   animations: [fadeInUp, staggerList]
 })
-export class RdvListComponent implements OnInit {
+export class RdvListComponent implements OnInit, OnDestroy {
+  rdvsAll: RendezVous[] = [];
   rdvs: RendezVous[] = [];
   displayedColumns = ['dateHeure', 'patient', 'medecin', 'motif', 'statut', 'actions'];
   loading = false;
   totalPages = 0;
   currentPage = 0;
   statutFilter: StatutRDV | '' = '';
+  keyword = '';
 
   statuts: { value: StatutRDV | '', label: string }[] = [
     { value: '',           label: 'Tous'       },
@@ -44,26 +50,64 @@ export class RdvListComponent implements OnInit {
     { value: 'TERMINE',    label: 'Terminé'    }
   ];
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private rdvService: RdvService,
     private dialog: MatDialog,
     private toast: ToastService,
+    private globalSearch: GlobalSearchService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    this.globalSearch.term$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe(term => {
+        if (term !== this.keyword) {
+          this.keyword = term;
+          this.applyFilter();
+        }
+      });
+    this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   load(): void {
     this.loading = true;
     this.rdvService.getAll(this.currentPage, 10, this.statutFilter || undefined).subscribe({
       next: page => {
-        this.rdvs = page.content;
+        this.rdvsAll = page.content;
         this.totalPages = page.totalPages;
         this.loading = false;
+        this.applyFilter();
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); }
     });
+  }
+
+  applyFilter(): void {
+    if (!this.keyword) {
+      this.rdvs = [...this.rdvsAll];
+      return;
+    }
+    const kw = this.keyword.toLowerCase();
+    this.rdvs = this.rdvsAll.filter(r =>
+      (r.patientNom || '').toLowerCase().includes(kw) ||
+      (r.medecinNom || '').toLowerCase().includes(kw) ||
+      (r.motif || '').toLowerCase().includes(kw)
+    );
+  }
+
+  onSearch(term: string): void {
+    this.keyword = term;
+    this.globalSearch.setTerm(term);
+    this.applyFilter();
   }
 
   onStatutChange(statut: StatutRDV | ''): void { this.statutFilter = statut; this.currentPage = 0; this.load(); }

@@ -13,7 +13,7 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <app-search-bar (searchTerm)="onSearch($event)" class="flex-1"></app-search-bar>
+    <app-search-bar (searchTerm)="onSearch($event)" [term]="keyword" class="flex-1"></app-search-bar>
     <select [(ngModel)]="specialiteFilter" (ngModelChange)="onSpecialiteChange()" class="filter-select">
       <option value="">Toutes spécialités</option>
       <option *ngFor="let s of specialites" [value]="s">{{ s }}</option>
@@ -87,7 +87,7 @@
 
     <div *ngIf="!loading && filtered.length === 0" class="empty-state">
       <mat-icon>medical_services</mat-icon>
-      <p>Aucun médecin trouvé</p>
+      <p>{{ keyword ? 'Aucun résultat pour "' + keyword + '"' : 'Aucun médecin trouvé' }}</p>
     </div>
   </div>
 

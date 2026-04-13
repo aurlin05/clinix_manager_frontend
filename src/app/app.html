@@ -75,26 +75,60 @@
         </div>
       </div>
 
-      <!-- Center — search -->
-      <div class="header-search hidden md:flex">
+      <!-- Center — Global search -->
+      <div class="header-search hidden md:flex" [class.header-search-active]="searchTerm">
         <mat-icon class="search-icon">search</mat-icon>
-        <input class="search-input" placeholder="Recherche rapide…" readonly/>
-        <span class="search-kbd">Ctrl K</span>
+        <input
+          #headerSearchInput
+          class="search-input"
+          placeholder="Rechercher dans toute l'app… (Ctrl+K)"
+          [value]="searchTerm"
+          (input)="onHeaderSearch($any($event.target).value)"
+          (keyup.escape)="clearSearch()"
+        />
+        <button *ngIf="searchTerm" class="search-clear-btn" (click)="clearSearch()" type="button">
+          <mat-icon>close</mat-icon>
+        </button>
+        <span class="search-kbd" *ngIf="!searchTerm">Ctrl K</span>
       </div>
 
       <!-- Right — notifs + user -->
       <div class="header-right">
+
         <!-- Notifications -->
-        <button class="notif-btn" matTooltip="Notifications">
+        <button class="notif-btn" [matMenuTriggerFor]="notifMenu" matTooltip="Notifications">
           <mat-icon>notifications_none</mat-icon>
           <span class="notif-badge" *ngIf="notifCount > 0">{{ notifCount }}</span>
         </button>
 
+        <mat-menu #notifMenu="matMenu" xPosition="before">
+          <div class="notif-panel" (click)="$event.stopPropagation()">
+            <div class="notif-panel-header">
+              <span class="notif-panel-title">Notifications</span>
+              <span class="notif-count-chip">{{ notifCount }}</span>
+            </div>
+            <div class="notif-panel-list">
+              <div *ngFor="let n of notifications" class="notif-panel-item">
+                <div class="notif-item-icon" [style.background]="n.color + '18'">
+                  <mat-icon [style.color]="n.color">{{ n.icon }}</mat-icon>
+                </div>
+                <div class="notif-item-body">
+                  <p class="notif-item-msg">{{ n.message }}</p>
+                  <span class="notif-item-time">{{ n.time }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="notif-panel-footer">
+              Voir toutes les notifications
+            </div>
+          </div>
+        </mat-menu>
+
         <!-- Separator -->
         <div class="header-sep"></div>
 
-        <!-- User -->
-        <div class="user-chip">
+        <!-- User chip -->
+        <div class="user-chip" [matMenuTriggerFor]="userMenu">
           <div class="user-chip-avatar">{{ userInitials }}</div>
           <div class="hidden sm:flex flex-col leading-tight">
             <span class="chip-name">{{ currentUser?.username }}</span>
@@ -102,6 +136,33 @@
           </div>
           <mat-icon class="chip-arrow hidden sm:block">expand_more</mat-icon>
         </div>
+
+        <mat-menu #userMenu="matMenu" xPosition="before">
+          <div class="user-menu-panel" (click)="$event.stopPropagation()">
+            <div class="user-menu-header">
+              <div class="user-menu-avatar">{{ userInitials }}</div>
+              <div>
+                <p class="user-menu-name">{{ currentUser?.username }}</p>
+                <p class="user-menu-role">{{ roleLabel }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="user-menu-sep"></div>
+          <button mat-menu-item class="user-menu-item" disabled>
+            <mat-icon>person_outline</mat-icon>
+            <span>Mon profil</span>
+          </button>
+          <button mat-menu-item class="user-menu-item" disabled>
+            <mat-icon>settings</mat-icon>
+            <span>Paramètres</span>
+          </button>
+          <div class="user-menu-sep"></div>
+          <button mat-menu-item class="user-menu-item user-menu-logout" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Se déconnecter</span>
+          </button>
+        </mat-menu>
+
       </div>
 
     </header>

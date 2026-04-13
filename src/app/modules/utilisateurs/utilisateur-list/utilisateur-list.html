@@ -11,6 +11,15 @@
     </button>
   </div>
 
+  <!-- Toolbar with search -->
+  <div class="toolbar">
+    <app-search-bar
+      (searchTerm)="onSearch($event)"
+      [term]="keyword"
+      class="flex-1">
+    </app-search-bar>
+  </div>
+
   <mat-progress-bar *ngIf="loading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
   <div class="table-card">
@@ -74,7 +83,7 @@
               (click)="openForm(u)">
               <mat-icon>manage_accounts</mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Supprimer" class="action-btn action-delete"
+            <button mat-icon-button class="action-btn action-delete"
               (click)="delete(u)"
               [disabled]="isSelf(u)"
               [matTooltip]="isSelf(u) ? 'Impossible de supprimer votre propre compte' : 'Supprimer'">
@@ -90,7 +99,7 @@
 
     <div *ngIf="!loading && users.length === 0" class="empty-state">
       <mat-icon>group</mat-icon>
-      <p>Aucun utilisateur trouvé</p>
+      <p>{{ keyword ? 'Aucun résultat pour "' + keyword + '"' : 'Aucun utilisateur trouvé' }}</p>
     </div>
   </div>
 

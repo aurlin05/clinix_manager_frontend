@@ -13,7 +13,7 @@
 
   <!-- Search -->
   <div class="toolbar">
-    <app-search-bar (searchTerm)="onSearch($event)" class="flex-1"></app-search-bar>
+    <app-search-bar (searchTerm)="onSearch($event)" [term]="keyword" class="flex-1"></app-search-bar>
   </div>
 
   <!-- Loading bar -->
@@ -90,7 +90,7 @@
 
     <div *ngIf="!loading && patients.length === 0" class="empty-state">
       <mat-icon>person_search</mat-icon>
-      <p>Aucun patient trouvé</p>
+      <p>{{ keyword ? 'Aucun résultat pour "' + keyword + '"' : 'Aucun patient trouvé' }}</p>
     </div>
   </div>
 

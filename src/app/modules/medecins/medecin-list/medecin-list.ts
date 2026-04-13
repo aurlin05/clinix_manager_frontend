@@ -1,5 +1,5 @@
 // → src/app/modules/medecins/components/medecin-list/medecin-list.ts
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -9,6 +9,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { MedecinService } from '../../../core/services/medecin';
 import { Medecin } from '../../../shared/models/medecin';
 import { MedecinFormComponent } from '../medecin-form/medecin-form';
@@ -16,6 +18,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { PaginationComponent } from '../../../shared/components/pagination/pagination';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar';
 import { ToastService } from '../../../core/services/toast.service';
+import { GlobalSearchService } from '../../../core/services/global-search.service';
 import { fadeInUp, staggerList } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -30,7 +33,7 @@ import { fadeInUp, staggerList } from '../../../shared/animations/app.animations
   styleUrls: ['./medecin-list.scss'],
   animations: [fadeInUp, staggerList]
 })
-export class MedecinListComponent implements OnInit {
+export class MedecinListComponent implements OnInit, OnDestroy {
   medecins: Medecin[] = [];
   filtered: Medecin[] = [];
   displayedColumns = ['avatar', 'nom', 'specialite', 'telephone', 'matricule', 'disponible', 'actions'];
@@ -42,14 +45,34 @@ export class MedecinListComponent implements OnInit {
 
   specialites = ['Cardiologie', 'Dermatologie', 'Neurologie', 'Pédiatrie', 'Chirurgie', 'Gynécologie', 'Ophtalmologie', 'Orthopédie'];
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private medecinService: MedecinService,
     private dialog: MatDialog,
     private toast: ToastService,
+    private globalSearch: GlobalSearchService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    // Sync with global header search
+    this.globalSearch.term$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe(term => {
+        if (term !== this.keyword) {
+          this.keyword = term;
+          this.currentPage = 0;
+          this.load();
+        }
+      });
+    this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   load(): void {
     this.loading = true;
@@ -74,7 +97,13 @@ export class MedecinListComponent implements OnInit {
       : [...this.medecins];
   }
 
-  onSearch(term: string): void { this.keyword = term; this.currentPage = 0; this.load(); }
+  onSearch(term: string): void {
+    this.keyword = term;
+    this.currentPage = 0;
+    this.globalSearch.setTerm(term);
+    this.load();
+  }
+
   onSpecialiteChange(): void { this.applySpecialiteFilter(); }
   onPageChange(page: number): void { this.currentPage = page; this.load(); }
 

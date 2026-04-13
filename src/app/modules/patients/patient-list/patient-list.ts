@@ -1,5 +1,5 @@
 // → src/app/modules/patients/components/patient-list/patient-list.ts
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { PatientService } from '../../../core/services/patient';
 import { Patient } from '../../../shared/models/patient';
 import { PatientFormComponent } from '../patient-form/patient-form';
@@ -15,6 +17,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { PaginationComponent } from '../../../shared/components/pagination/pagination';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar';
 import { ToastService } from '../../../core/services/toast.service';
+import { GlobalSearchService } from '../../../core/services/global-search.service';
 import { fadeInUp, staggerList } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -29,7 +32,7 @@ import { fadeInUp, staggerList } from '../../../shared/animations/app.animations
   styleUrls: ['./patient-list.scss'],
   animations: [fadeInUp, staggerList]
 })
-export class PatientListComponent implements OnInit {
+export class PatientListComponent implements OnInit, OnDestroy {
   patients: Patient[] = [];
   displayedColumns = ['avatar', 'nom', 'cin', 'telephone', 'sexe', 'groupeSanguin', 'actions'];
   loading = false;
@@ -37,14 +40,34 @@ export class PatientListComponent implements OnInit {
   currentPage = 0;
   keyword = '';
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private patientService: PatientService,
     private dialog: MatDialog,
     private toast: ToastService,
+    private globalSearch: GlobalSearchService,
     private cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    // Sync with global header search
+    this.globalSearch.term$
+      .pipe(takeUntil(this.destroy$), distinctUntilChanged())
+      .subscribe(term => {
+        if (term !== this.keyword) {
+          this.keyword = term;
+          this.currentPage = 0;
+          this.load();
+        }
+      });
+    this.load();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   load(): void {
     this.loading = true;
@@ -62,7 +85,13 @@ export class PatientListComponent implements OnInit {
     });
   }
 
-  onSearch(term: string): void { this.keyword = term; this.currentPage = 0; this.load(); }
+  onSearch(term: string): void {
+    this.keyword = term;
+    this.currentPage = 0;
+    this.globalSearch.setTerm(term);
+    this.load();
+  }
+
   onPageChange(page: number): void { this.currentPage = page; this.load(); }
 
   openForm(patient?: Patient): void {

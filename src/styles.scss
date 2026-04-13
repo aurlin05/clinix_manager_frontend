@@ -122,4 +122,122 @@ th.mat-mdc-header-cell {
   color: var(--color-text-muted) !important;
   font-weight: 700 !important;
   border-bottom: 2px solid var(--color-border) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  height: 44px !important;
+}
+
+// ── Table cell height ─────────────────────────────────────
+td.mat-mdc-cell {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+// ── Row actions: légèrement visible par défaut ────────────
+.table-row .row-actions {
+  opacity: 0.25;
+}
+.table-row:hover .row-actions {
+  opacity: 1 !important;
+}
+
+// ── Toolbar global (search + filters) ────────────────────
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+// ── Loading bar global ────────────────────────────────────
+.loading-bar {
+  border-radius: 4px;
+  margin-bottom: 8px;
+  height: 3px !important;
+}
+
+// ── Mat menu panel global ─────────────────────────────────
+.mat-mdc-menu-panel {
+  border-radius: 14px !important;
+  box-shadow: 0 8px 32px rgba(15,37,72,0.14) !important;
+  overflow: hidden !important;
+}
+
+// ════════════════════════════════════════════════════════════
+// NOTIFICATION PANEL (contenu du mat-menu)
+// ════════════════════════════════════════════════════════════
+.notif-panel { min-width: 320px; max-width: 360px; }
+
+.notif-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #EEF2F7;
+}
+
+.notif-panel-title { font-size: 14px; font-weight: 700; color: #0F172A; }
+
+.notif-count-chip {
+  background: #2563EB; color: white;
+  font-size: 10px; font-weight: 700;
+  padding: 1px 7px; border-radius: 10px;
+}
+
+.notif-panel-list { padding: 6px 0; }
+
+.notif-panel-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 16px; cursor: pointer;
+  transition: background 0.12s ease;
+  &:hover { background: #F8FAFC; }
+}
+
+.notif-item-icon {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.notif-item-body { flex: 1; min-width: 0; }
+.notif-item-msg  { font-size: 13px; font-weight: 500; color: #0F172A; margin: 0 0 2px; }
+.notif-item-time { font-size: 11px; color: #94A3B8; }
+
+.notif-panel-footer {
+  padding: 10px 16px; border-top: 1px solid #EEF2F7;
+  text-align: center; font-size: 12px; font-weight: 600; color: #2563EB;
+  cursor: pointer;
+  &:hover { background: #F8FAFC; }
+}
+
+// ════════════════════════════════════════════════════════════
+// USER DROPDOWN (contenu du mat-menu)
+// ════════════════════════════════════════════════════════════
+.user-menu-panel { padding: 14px 16px 10px; }
+
+.user-menu-header { display: flex; align-items: center; gap: 12px; }
+
+.user-menu-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #1d4ed8, #0ea5e9);
+  color: white; font-size: 14px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.user-menu-name { font-size: 14px; font-weight: 600; color: #0F172A; margin: 0; }
+.user-menu-role { font-size: 11px; color: #94A3B8; margin: 2px 0 0; }
+
+.user-menu-sep { height: 1px; background: #EEF2F7; margin: 6px 0; }
+
+.user-menu-item {
+  font-size: 13px !important; color: #334155 !important; height: 42px !important;
+  mat-icon { font-size: 18px !important; width: 18px !important; height: 18px !important; color: #64748B !important; }
+  &:hover:not([disabled]) { background: #F8FAFC !important; }
+  &[disabled] { opacity: 0.4; }
+}
+
+.user-menu-logout {
+  color: #EF4444 !important;
+  mat-icon { color: #EF4444 !important; }
+  &:hover { background: rgba(239,68,68,0.06) !important; }
 }

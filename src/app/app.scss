@@ -216,7 +216,7 @@
 // ── Center search ─────────────────────────────────────────
 .header-search {
   flex: 1;
-  max-width: 380px;
+  max-width: 440px;
   height: 38px;
   background: #F8FAFC;
   border: 1.5px solid #E8EDF5;
@@ -229,6 +229,12 @@
   transition: all 0.18s ease;
 
   &:hover { border-color: #CBD5E1; background: white; }
+
+  &-active {
+    border-color: #2563EB !important;
+    background: white !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12) !important;
+  }
 }
 
 .search-icon {
@@ -245,7 +251,18 @@
   font-family: inherit;
   color: #334155;
   cursor: text;
+  min-width: 0;
   &::placeholder { color: #94A3B8; }
+}
+
+.search-clear-btn {
+  background: none; border: none; cursor: pointer; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 4px;
+  color: #94A3B8; flex-shrink: 0;
+  transition: all 0.15s ease;
+  &:hover { color: #475569; background: #F1F5F9; }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
 }
 
 .search-kbd {
@@ -354,3 +371,5 @@
   width: 100%;
   min-width: 0;
 }
+
+// (Menu panel styles are in global styles.scss — Angular Material overlays render outside component scope)

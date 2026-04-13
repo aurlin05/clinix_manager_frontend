@@ -1,5 +1,6 @@
 <!-- → src/app/modules/rendez-vous/components/rdv-list/rdv-list.html -->
 <div @fadeInUp class="list-page">
+
   <!-- Header -->
   <div class="list-header">
     <div>
@@ -9,6 +10,15 @@
     <button mat-raised-button class="btn-primary" (click)="openForm()">
       <mat-icon>add</mat-icon> Nouveau RDV
     </button>
+  </div>
+
+  <!-- Toolbar : search + status chips -->
+  <div class="toolbar">
+    <app-search-bar
+      (searchTerm)="onSearch($event)"
+      [term]="keyword"
+      class="flex-1">
+    </app-search-bar>
   </div>
 
   <!-- Status filter chips -->
@@ -30,7 +40,7 @@
         <th mat-header-cell *matHeaderCellDef>Date & Heure</th>
         <td mat-cell *matCellDef="let r">
           <div class="date-block">
-            <div class="date-day">{{ r.dateHeure | date:'dd MMM' }}</div>
+            <div class="date-day">{{ r.dateHeure | date:'dd MMM yyyy' }}</div>
             <div class="date-time">{{ r.dateHeure | date:'HH:mm' }}</div>
           </div>
         </td>
@@ -38,17 +48,21 @@
 
       <ng-container matColumnDef="patient">
         <th mat-header-cell *matHeaderCellDef>Patient</th>
-        <td mat-cell *matCellDef="let r" class="cell-primary">{{ r.patientNom || 'Patient #' + r.patientId }}</td>
+        <td mat-cell *matCellDef="let r">
+          <div class="cell-primary">{{ r.patientNom || 'Patient #' + r.patientId }}</div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="medecin">
         <th mat-header-cell *matHeaderCellDef>Médecin</th>
-        <td mat-cell *matCellDef="let r" class="cell-secondary">{{ r.medecinNom || 'Dr. #' + r.medecinId }}</td>
+        <td mat-cell *matCellDef="let r">
+          <div class="cell-secondary">{{ r.medecinNom ? 'Dr. ' + r.medecinNom : 'Dr. #' + r.medecinId }}</div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="motif">
         <th mat-header-cell *matHeaderCellDef>Motif</th>
-        <td mat-cell *matCellDef="let r" class="cell-secondary motif-cell">{{ r.motif }}</td>
+        <td mat-cell *matCellDef="let r" class="cell-secondary motif-cell">{{ r.motif || '—' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="statut">
@@ -81,7 +95,7 @@
 
     <div *ngIf="!loading && rdvs.length === 0" class="empty-state">
       <mat-icon>event_busy</mat-icon>
-      <p>Aucun rendez-vous trouvé</p>
+      <p>{{ keyword ? 'Aucun résultat pour "' + keyword + '"' : 'Aucun rendez-vous trouvé' }}</p>
     </div>
   </div>
 
