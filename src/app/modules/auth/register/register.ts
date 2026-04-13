@@ -1,18 +1,19 @@
 // → src/app/modules/auth/register/register.ts
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../core/services/auth';
 import { ToastService } from '../../../core/services/toast.service';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { fadeInUp } from '../../../shared/animations/app.animations';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatIconModule],
   templateUrl: './register.html',
   styleUrls: ['./register.scss'],
   animations: [fadeInUp]
@@ -32,7 +33,8 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       username:        ['', Validators.required],
@@ -59,14 +61,15 @@ export class RegisterComponent {
     }
     const { confirmPassword, ...payload } = this.form.value;
     this.loading = true;
-    this.auth.register(payload).subscribe({
+    this.auth.register(payload).pipe(
+      finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+    ).subscribe({
       next: () => {
         this.toast.success('Votre compte a été créé. Connectez-vous !', 'Compte créé');
         this.router.navigate(['/auth/login']);
       },
       error: (err) => {
-        this.loading = false;
-        const msg = err?.error?.message || 'Ce nom d\'utilisateur est déjà pris.';
+        const msg = extractErrorMessage(err, 'Ce nom d\'utilisateur est déjà pris.');
         this.toast.error(msg, 'Échec de l\'inscription');
       }
     });

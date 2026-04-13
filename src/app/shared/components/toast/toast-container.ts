@@ -1,5 +1,5 @@
 // → src/app/shared/components/toast/toast-container.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Subscription } from 'rxjs';
@@ -129,11 +129,12 @@ export class ToastContainerComponent implements OnInit, OnDestroy {
 
   private sub!: Subscription;
 
-  constructor(private toastService: ToastService) {}
+  constructor(private toastService: ToastService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.sub = this.toastService.toasts$.subscribe(toasts => {
       this.toasts = toasts;
+      this.cdr.detectChanges();
     });
   }
 

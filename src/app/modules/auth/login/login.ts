@@ -1,10 +1,10 @@
 // → src/app/modules/auth/login/login.ts
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { finalize } from 'rxjs/operators';
 import { fadeInUp } from '../../../shared/animations/app.animations';
 import { AuthService } from '../../../core/services/auth';
 import { ToastService } from '../../../core/services/toast.service';
@@ -12,7 +12,7 @@ import { ToastService } from '../../../core/services/toast.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatIconModule],
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
   animations: [fadeInUp]
@@ -32,7 +32,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -46,13 +47,15 @@ export class LoginComponent {
       return;
     }
     this.loading = true;
-    this.auth.login(this.form.value).subscribe({
+
+    this.auth.login(this.form.value).pipe(
+      finalize(() => { this.loading = false; this.cdr.detectChanges(); })
+    ).subscribe({
       next: () => {
         this.toast.success('Bienvenue sur Clinix Manager !', 'Connexion réussie');
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.loading = false;
         const msg = err?.error?.message || 'Nom d\'utilisateur ou mot de passe incorrect.';
         this.toast.error(msg, 'Connexion échouée');
       }
