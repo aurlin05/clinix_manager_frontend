@@ -64,9 +64,10 @@ export class RegisterComponent {
         this.toast.success('Votre compte a été créé. Connectez-vous !', 'Compte créé');
         this.router.navigate(['/auth/login']);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toast.error('Ce nom d\'utilisateur est peut-être déjà pris.', 'Échec de l\'inscription');
+        const msg = err?.error?.message || 'Ce nom d\'utilisateur est déjà pris.';
+        this.toast.error(msg, 'Échec de l\'inscription');
       }
     });
   }

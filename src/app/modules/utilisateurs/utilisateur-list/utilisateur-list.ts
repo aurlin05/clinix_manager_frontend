@@ -16,6 +16,7 @@ import { SearchBarComponent } from '../../../shared/components/search-bar/search
 import { ToastService } from '../../../core/services/toast.service';
 import { AuthService } from '../../../core/services/auth';
 import { GlobalSearchService } from '../../../core/services/global-search.service';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { fadeInUp, staggerList } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -85,7 +86,11 @@ export class UtilisateurListComponent implements OnInit, OnDestroy {
         this.applyFilter();
         this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; this.cdr.detectChanges(); }
+      error: (err) => {
+        this.loading = false;
+        this.toast.error(extractErrorMessage(err, 'Impossible de charger les utilisateurs.'), 'Erreur');
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -137,7 +142,7 @@ export class UtilisateurListComponent implements OnInit, OnDestroy {
             this.toast.success(`Compte "${user.username}" supprimé.`, 'Compte supprimé');
             this.load();
           },
-          error: () => this.toast.error('Impossible de supprimer ce compte.', 'Erreur')
+          error: (err) => this.toast.error(extractErrorMessage(err, 'Impossible de supprimer ce compte.'), 'Erreur')
         });
       }
     });

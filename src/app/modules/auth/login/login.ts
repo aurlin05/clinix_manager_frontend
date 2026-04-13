@@ -51,9 +51,10 @@ export class LoginComponent {
         this.toast.success('Bienvenue sur Clinix Manager !', 'Connexion réussie');
         this.router.navigate(['/dashboard']);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toast.error('Nom d\'utilisateur ou mot de passe incorrect.', 'Connexion échouée');
+        const msg = err?.error?.message || 'Nom d\'utilisateur ou mot de passe incorrect.';
+        this.toast.error(msg, 'Connexion échouée');
       }
     });
   }

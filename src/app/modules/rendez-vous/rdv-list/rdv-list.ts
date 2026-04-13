@@ -18,6 +18,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar';
 import { ToastService } from '../../../core/services/toast.service';
 import { GlobalSearchService } from '../../../core/services/global-search.service';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { fadeInUp, staggerList } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -87,7 +88,11 @@ export class RdvListComponent implements OnInit, OnDestroy {
         this.applyFilter();
         this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; this.cdr.detectChanges(); }
+      error: (err) => {
+        this.loading = false;
+        this.toast.error(extractErrorMessage(err, 'Impossible de charger les rendez-vous.'), 'Erreur');
+        this.cdr.detectChanges();
+      }
     });
   }
 
@@ -138,7 +143,7 @@ export class RdvListComponent implements OnInit, OnDestroy {
             this.toast.success('Le rendez-vous a été supprimé.', 'RDV supprimé');
             this.load();
           },
-          error: () => this.toast.error('Impossible de supprimer ce rendez-vous.', 'Erreur')
+          error: (err) => this.toast.error(extractErrorMessage(err, 'Impossible de supprimer ce rendez-vous.'), 'Erreur')
         });
       }
     });

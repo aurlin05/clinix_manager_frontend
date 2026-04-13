@@ -8,6 +8,7 @@ import { UserManagementService, UserItem } from '../../../core/services/user-man
 import { MedecinService } from '../../../core/services/medecin';
 import { Medecin } from '../../../shared/models/medecin';
 import { ToastService } from '../../../core/services/toast.service';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { scaleIn } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -27,7 +28,7 @@ export class UtilisateurFormComponent implements OnInit {
   roles = [
     { value: 'ADMIN',   label: 'Administrateur', icon: 'admin_panel_settings', color: '#DC2626' },
     { value: 'USER',    label: 'Secrétaire',      icon: 'badge',                color: '#2563EB' },
-    { value: 'MEDECIN', label: 'Médecin',          icon: 'medical_services',    color: '#10B981' },
+    { value: 'MEDECIN', label: 'Médecin',          icon: 'medical_services',    color: '#10B981' }
   ];
 
   constructor(
@@ -50,12 +51,16 @@ export class UtilisateurFormComponent implements OnInit {
       medecinId: [this.data?.medecinId || null]
     });
 
-    // Charger la liste des médecins pour le sélecteur
     this.medecinService.getAll(0, 200).subscribe({
-      next: page => { this.medecins = page.content; this.cdr.detectChanges(); }
+      next: page => { this.medecins = page.content; this.cdr.detectChanges(); },
+      error: () => {
+        this.toast.warning(
+          'Impossible de charger la liste des médecins.',
+          'Chargement incomplet'
+        );
+      }
     });
 
-    // Réagir aux changements de rôle
     this.form.get('role')?.valueChanges.subscribe(role => {
       const ctrl = this.form.get('medecinId');
       if (role === 'MEDECIN') {
@@ -94,8 +99,7 @@ export class UtilisateurFormComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        const msg = err?.error?.message || 'Une erreur est survenue.';
-        this.toast.error(msg, 'Erreur');
+        this.toast.error(extractErrorMessage(err), 'Erreur');
         this.cdr.detectChanges();
       }
     });

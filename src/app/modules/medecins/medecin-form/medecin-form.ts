@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MedecinService } from '../../../core/services/medecin';
 import { ToastService } from '../../../core/services/toast.service';
 import { Medecin } from '../../../shared/models/medecin';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { scaleIn } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -21,6 +22,7 @@ export class MedecinFormComponent implements OnInit {
   form!: FormGroup;
   loading = false;
   isEdit: boolean;
+  createAccount = false;
 
   specialites = [
     'Médecine générale', 'Cardiologie', 'Dermatologie', 'Neurologie',
@@ -38,8 +40,6 @@ export class MedecinFormComponent implements OnInit {
   ) {
     this.isEdit = !!data;
   }
-
-  createAccount = false;
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -94,9 +94,9 @@ export class MedecinFormComponent implements OnInit {
         );
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toast.error('Une erreur est survenue. Veuillez réessayer.', 'Erreur');
+        this.toast.error(extractErrorMessage(err), 'Erreur');
         this.cdr.detectChanges();
       }
     });

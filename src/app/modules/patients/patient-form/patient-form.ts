@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PatientService } from '../../../core/services/patient';
 import { ToastService } from '../../../core/services/toast.service';
 import { Patient } from '../../../shared/models/patient';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { scaleIn } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -68,9 +69,9 @@ export class PatientFormComponent implements OnInit {
         );
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toast.error('Une erreur est survenue. Veuillez réessayer.', 'Erreur');
+        this.toast.error(extractErrorMessage(err), 'Erreur');
         this.cdr.detectChanges();
       }
     });

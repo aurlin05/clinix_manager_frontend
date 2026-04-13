@@ -12,6 +12,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { RendezVous } from '../../../shared/models/rendez-vous';
 import { Patient } from '../../../shared/models/patient';
 import { Medecin } from '../../../shared/models/medecin';
+import { extractErrorMessage } from '../../../core/utils/error.utils';
 import { scaleIn } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -56,10 +57,23 @@ export class RdvFormComponent implements OnInit {
     });
 
     this.patientService.getAll(0, 200).subscribe({
-      next: p => { this.patients = p.content; this.cdr.detectChanges(); }
+      next: p => { this.patients = p.content; this.cdr.detectChanges(); },
+      error: () => {
+        this.toast.warning(
+          'Impossible de charger la liste des patients. Rafraîchissez le formulaire.',
+          'Chargement incomplet'
+        );
+      }
     });
+
     this.medecinService.getAll(0, 200).subscribe({
-      next: m => { this.medecins = m.content; this.cdr.detectChanges(); }
+      next: m => { this.medecins = m.content; this.cdr.detectChanges(); },
+      error: () => {
+        this.toast.warning(
+          'Impossible de charger la liste des médecins. Rafraîchissez le formulaire.',
+          'Chargement incomplet'
+        );
+      }
     });
   }
 
@@ -111,9 +125,9 @@ export class RdvFormComponent implements OnInit {
         );
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (err) => {
         this.loading = false;
-        this.toast.error('Une erreur est survenue. Veuillez réessayer.', 'Erreur');
+        this.toast.error(extractErrorMessage(err), 'Erreur');
         this.cdr.detectChanges();
       }
     });

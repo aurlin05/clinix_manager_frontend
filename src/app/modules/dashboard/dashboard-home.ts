@@ -16,6 +16,7 @@ import {
 import { BaseChartDirective } from 'ng2-charts';
 import { DashboardService, DashboardStats, RdvDistribution, TopMedecin } from '../../core/services/dashboard';
 import { AuthService } from '../../core/services/auth';
+import { ToastService } from '../../core/services/toast.service';
 import { User } from '../../shared/models/user';
 import { fadeInUp } from '../../shared/animations/app.animations';
 import { forkJoin, of } from 'rxjs';
@@ -121,6 +122,7 @@ export class DashboardHomeComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private authService: AuthService,
+    private toast: ToastService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {}
@@ -132,28 +134,16 @@ export class DashboardHomeComponent implements OnInit {
     // Charger toutes les données en parallèle avec gestion d'erreur robuste
     forkJoin({
       stats: this.dashboardService.getStats().pipe(
-        catchError(error => {
-          console.error('Erreur lors du chargement des stats:', error);
-          return of(null);
-        })
+        catchError(() => of(null))
       ),
       distribution: this.dashboardService.getRdvDistribution().pipe(
-        catchError(error => {
-          console.error('Erreur lors du chargement de la distribution:', error);
-          return of([]);
-        })
+        catchError(() => of([]))
       ),
       topMedecins: this.dashboardService.getTopMedecins().pipe(
-        catchError(error => {
-          console.error('Erreur lors du chargement des top médecins:', error);
-          return of([]);
-        })
+        catchError(() => of([]))
       ),
       growth: this.dashboardService.getGrowth().pipe(
-        catchError(error => {
-          console.error('Erreur lors du chargement de la croissance:', error);
-          return of(0);
-        })
+        catchError(() => of(0))
       )
     }).subscribe({
       next: (results) => {
@@ -179,9 +169,9 @@ export class DashboardHomeComponent implements OnInit {
         this.loading = false;
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error('Erreur globale lors du chargement des données:', error);
+      error: () => {
         this.loading = false;
+        this.toast.error('Impossible de charger le tableau de bord.', 'Erreur');
         this.cdr.detectChanges();
       }
     });
