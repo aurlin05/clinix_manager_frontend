@@ -89,12 +89,12 @@
       <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
 
         <div class="field-group">
-          <label class="field-label">Nom d'utilisateur</label>
-          <div class="field-wrap" [class.field-error]="form.get('username')?.invalid && form.get('username')?.touched">
+          <label class="field-label">Nom d'utilisateur ou email</label>
+          <div class="field-wrap" [class.field-error]="form.get('usernameOrEmail')?.invalid && form.get('usernameOrEmail')?.touched">
             <mat-icon class="field-icon-left">person_outline</mat-icon>
-            <input class="field-input" formControlName="username" placeholder="Votre identifiant" autocomplete="username"/>
+            <input class="field-input" formControlName="usernameOrEmail" placeholder="Identifiant ou adresse email" autocomplete="username"/>
           </div>
-          <p class="field-err-msg" *ngIf="form.get('username')?.hasError('required') && form.get('username')?.touched">
+          <p class="field-err-msg" *ngIf="form.get('usernameOrEmail')?.hasError('required') && form.get('usernameOrEmail')?.touched">
             Champ requis
           </p>
         </div>

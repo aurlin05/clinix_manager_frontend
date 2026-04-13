@@ -79,6 +79,16 @@
             <input class="field-input" formControlName="username" placeholder="Choisissez un identifiant" autocomplete="username"/>
           </div>
           <p class="field-err-msg" *ngIf="form.get('username')?.hasError('required') && form.get('username')?.touched">Champ requis</p>
+          <p class="field-err-msg" *ngIf="form.get('username')?.hasError('minlength') && form.get('username')?.touched">Minimum 3 caractères</p>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Adresse email <span class="field-optional">(optionnelle)</span></label>
+          <div class="field-wrap" [class.field-error]="form.get('email')?.invalid && form.get('email')?.touched">
+            <mat-icon class="field-icon-left">mail_outline</mat-icon>
+            <input class="field-input" formControlName="email" type="email" placeholder="exemple@clinique.com" autocomplete="email"/>
+          </div>
+          <p class="field-err-msg" *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">Adresse email invalide</p>
         </div>
 
         <div class="field-group">

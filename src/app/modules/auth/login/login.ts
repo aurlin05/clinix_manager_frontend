@@ -36,7 +36,7 @@ export class LoginComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
+      usernameOrEmail: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }

@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { User } from '../../shared/models/user';
 
-interface LoginRequest { username: string; password: string; }
-interface RegisterRequest { username: string; password: string; role?: string; }
+interface LoginRequest { usernameOrEmail: string; password: string; }
+interface RegisterRequest { username: string; email?: string; password: string; role?: string; }
 interface AuthResponse { token: string; }
 
 @Injectable({ providedIn: 'root' })

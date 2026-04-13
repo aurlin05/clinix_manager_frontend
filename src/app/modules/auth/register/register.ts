@@ -37,7 +37,8 @@ export class RegisterComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      username:        ['', Validators.required],
+      username:        ['', [Validators.required, Validators.minLength(3)]],
+      email:           ['', [Validators.email]],
       password:        ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       role:            ['ADMIN']
@@ -59,7 +60,8 @@ export class RegisterComponent {
       this.form.markAllAsTouched();
       return;
     }
-    const { confirmPassword, ...payload } = this.form.value;
+    const { confirmPassword, email, ...rest } = this.form.value;
+    const payload = email?.trim() ? { ...rest, email: email.trim() } : rest;
     this.loading = true;
     this.auth.register(payload).pipe(
       finalize(() => { this.loading = false; this.cdr.detectChanges(); })
